@@ -1,24 +1,25 @@
-module.exports = {
+module.export  =  {
+   "name": "default",
    "type": "mysql",
    "host": "localhost",
    "port": 3306,
-   "username": 'root',
+   "username": "root",
    "password": "",
-   "database": 'myangkringan',
+   "database": "myangkringan",
    "synchronize": true,
    "logging": false,
    "entities": [
-      "src/entity/**/*.ts"
+      __dirname + '/../**/*.js'
    ],
    "migrations": [
-      __dirname + "src/migration/**/*.ts"
+      "src/migration/**/*.js"
    ],
    "subscribers": [
-      __dirname + "src/subscriber/**/*.ts"
+      "src/subscriber/**/*.js"
    ],
-   "cli": {
-      "entitiesDir": "src/entity",
-      "migrationsDir": "src/migration",
-      "subscribersDir": "src/subscriber"
-   }
+   // "cli": {
+   //    "entitiesDir": "src/entity",
+   //    "migrationsDir": "src/migration",
+   //    "subscribersDir": "src/subscriber"
+   // }
 }
