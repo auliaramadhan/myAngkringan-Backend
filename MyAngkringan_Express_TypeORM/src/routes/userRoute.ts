@@ -9,6 +9,7 @@ import { responseSuccess } from '../util/Response';
 import { ErrorHandler } from '../util/ErrorHandler';
 import { IUser, User } from '../entity/User';
 import { auth, logout } from '../util/auth';
+import { Connection, getConnection } from 'typeorm';
 
 
 const route = express.Router()
@@ -81,6 +82,8 @@ route.put("/changeroles/:username", auth(["admin"]), async (req: Request, res: R
 route.post("/login", async (req: Request, res: Response, next: NextFunction) => {
 	const { username, password } = req.body;
 
+	console.log(req.body)
+
 	const dataUser = await userController.getOne(req, next)
 
 	if (typeof dataUser === undefined) { return; }
@@ -125,13 +128,13 @@ route.post('/forgot_password', async (req: Request, res: Response, next: NextFun
 			secure: false,
 			requireTLS: true,
 			auth: {
-				user: 'haruman.hijau@gmail.com',
-				pass: 'harumanmenjadihijau'
+				user: process.env.SMTP_USER,
+				pass: process.env.SMTP_PASSWORD
 			}
 		})
 
 		var mailOptions = {
-			from: 'haruman.hijau@gmail.com',
+			from: process.env.SMTP_USER,
 			to: User.email,
 			subject: '<Dont Repply Email>',
 			text: 'your new password for username ' + username + ' is ' + newPassword + `\n please immediately change after login`
@@ -159,4 +162,5 @@ route.post('/forgot_password', async (req: Request, res: Response, next: NextFun
 
 })
 
-export { route as routeUser }
+export {route as routeUser};
+

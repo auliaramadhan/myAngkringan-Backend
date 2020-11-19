@@ -1,14 +1,21 @@
-import { getRepository, FindManyOptions } from 'typeorm';
+import { getRepository, FindManyOptions, Repository } from 'typeorm';
 import { NextFunction, Request, Response } from "express";
 import { User, IUser } from '../entity/User';
 import { ErrorHandler, handleErrorDatabase, ErrCode } from '../util/ErrorHandler';
 import { Profile, IProfile } from '../entity/Profile';
+import { DBConnection } from '../util/Connection';
 
 export class ProfileController {
-    private profilRepository = getRepository(Profile);
+    private profilRepository : Repository<Profile>;
     // private restaurantRepository = getRepository(Restaurant);
 
 
+    constructor() {
+        DBConnection.connect().then(connection => {
+            this.profilRepository = connection.getRepository(Profile);
+        })
+    }
+    
 
     async all(next: NextFunction, request?: Request) {
         try {

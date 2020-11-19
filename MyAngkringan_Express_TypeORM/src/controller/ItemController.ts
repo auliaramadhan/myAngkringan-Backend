@@ -1,14 +1,20 @@
-import { getRepository, FindManyOptions } from 'typeorm';
+import { getRepository, FindManyOptions, Repository } from 'typeorm';
 import { NextFunction, Request, Response } from "express";
 import { User, IUser } from '../entity/User';
 import { ErrorHandler, handleErrorDatabase, ErrCode } from '../util/ErrorHandler';
 import { Item, IItem } from '../entity/Item';
 import { Restaurant } from '../entity/Restaurant';
+import { DBConnection } from '../util/Connection';
 
 export class ItemController {
-    private itemRepository = getRepository(Item);
+    private itemRepository: Repository<Item>;
     // private restaurantRepository = getRepository(Restaurant);
 
+    constructor() {
+        DBConnection.connect().then(connection => {
+            this.itemRepository = connection.getRepository(Item);
+        })
+    }
 
     limitOption(request: Request) {
         const body = { ...request.body, ...request.query }
@@ -50,7 +56,7 @@ export class ItemController {
         try {
             const dataSearch = request.body
             dataSearch.id = request.params.id
-            return this.itemRepository.findOneOrFail({ where: { ...dataSearch }, relations: ['review']  });
+            return this.itemRepository.findOneOrFail({ where: { ...dataSearch }, relations: ['review'] });
         } catch (error) { return handleErrorDatabase(error, next) }
     }
 

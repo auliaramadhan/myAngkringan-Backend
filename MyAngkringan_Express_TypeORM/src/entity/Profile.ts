@@ -26,11 +26,11 @@ export class Profile {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({type:"string", length:64, })
+    @Column()
     @IsNotEmpty()
     firstName: string;
 
-    @Column({type:"string", length:64, })
+    @Column()
     @IsNotEmpty()
     lastName: string;
 

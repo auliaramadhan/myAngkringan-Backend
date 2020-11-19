@@ -1,12 +1,26 @@
-import { getRepository } from "typeorm";
+import { getRepository, Repository } from "typeorm";
 import { NextFunction, Request, Response } from "express";
 import { User, IUser } from '../entity/User';
 import { ErrorHandler, handleErrorDatabase, ErrCode } from '../util/ErrorHandler';
 import { IProfile, Profile } from '../entity/Profile';
 import * as bcrypt from 'bcryptjs';
+import { DBConnection } from '../util/Connection';
 export class UserController {
+    
+    private userRepository: Repository<User>;
 
-    private userRepository = getRepository(User);
+    constructor() {
+        this.connectToDatabase()
+    }
+
+
+    async connectToDatabase() {
+        console.log(this.userRepository)
+        const connection = await DBConnection.connect()
+        this.userRepository = connection.getRepository(User)
+        console.log(this.userRepository)
+        return ;
+    }
 
 
     async all(next: NextFunction) {

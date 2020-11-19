@@ -1,12 +1,19 @@
-import { FindManyOptions, getRepository } from "typeorm";
+import { FindManyOptions, getRepository, Repository } from 'typeorm';
 import { NextFunction, Request, Response } from "express";
 import { User, IUser } from '../entity/User';
 import { ErrorHandler, handleErrorDatabase, ErrCode } from '../util/ErrorHandler';
 import { Review, IReview } from '../entity/Review';
+import { DBConnection } from '../util/Connection';
 
 export class ReviewController {
 
-    private reviewRepository = getRepository(Review);
+    private reviewRepository : Repository<Review>;
+
+    constructor() {
+        DBConnection.connect().then(connection => {
+            this.reviewRepository = connection.getRepository(Review);
+        })
+    }
 
     limitOption(request: Request) {
         const body = request.body

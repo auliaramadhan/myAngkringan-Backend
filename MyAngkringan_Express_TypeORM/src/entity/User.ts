@@ -29,14 +29,14 @@ export class User {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ type: "string", length: 64, })
+    @Column()
     @Index({ unique: true })
     username: string;
 
     @Column()
     password: string;
 
-    @Column({ type: "string", length: 128, })
+    @Column()
     @Index({ unique: true })
     email: string;
 
@@ -56,16 +56,14 @@ export class User {
     @UpdateDateColumn()
     updatedAt!: Date;
 
-    @OneToOne(type => Restaurant, { cascade: true, nullable: true, onDelete: "CASCADE" })
+    @OneToOne(type => Restaurant, { cascade: true, nullable: true })
     @JoinColumn()
     restaurant: Restaurant;
 
-    @OneToOne(type => Profile, { cascade: true, nullable: true, onDelete: "CASCADE" })
+    @OneToOne(type => Profile, { cascade: true, nullable: true })
     @JoinColumn()
     profile: Profile;
 
-    @Column()
-    profileId: number;
 
     public hashPassword(password:string) {
         this.password = bcrypt.hashSync(password, 8);

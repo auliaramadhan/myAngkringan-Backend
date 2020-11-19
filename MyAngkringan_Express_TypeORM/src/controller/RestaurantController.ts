@@ -1,14 +1,21 @@
-import { FindManyOptions, getRepository } from "typeorm";
+import { FindManyOptions, getRepository, Repository } from 'typeorm';
 import { NextFunction, Request, Response } from "express";
 import { User, IUser } from '../entity/User';
 import { ErrorHandler, handleErrorDatabase, ErrCode } from '../util/ErrorHandler';
 import { IProfile, Profile } from '../entity/Profile';
 import * as bcrypt from 'bcryptjs';
 import { Restaurant, IRestaurant } from '../entity/Restaurant';
+import { DBConnection } from '../util/Connection';
 
 export class RestaurantController {
 
-    private restaurantRepository = getRepository(Restaurant);
+    private restaurantRepository :Repository<Restaurant> ;
+
+    constructor() {
+        DBConnection.connect().then(connection => {
+            this.restaurantRepository = connection.getRepository(Restaurant);
+        })
+    }
 
     limitOption(request: Request) {
         const body = request.body
