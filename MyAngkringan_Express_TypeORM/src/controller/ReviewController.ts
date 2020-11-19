@@ -9,10 +9,15 @@ export class ReviewController {
 
     private reviewRepository : Repository<Review>;
 
+
     constructor() {
-        DBConnection.connect().then(connection => {
-            this.reviewRepository = connection.getRepository(Review);
-        })
+        this.connectToDatabase()
+    }
+
+    async connectToDatabase() {
+        const connection = await DBConnection.connectionWait()      
+        this.reviewRepository = connection.getRepository(Review);
+        return;
     }
 
     limitOption(request: Request) {

@@ -9,11 +9,14 @@ export class ProfileController {
     private profilRepository : Repository<Profile>;
     // private restaurantRepository = getRepository(Restaurant);
 
-
     constructor() {
-        DBConnection.connect().then(connection => {
+        this.connectToDatabase()
+    }
+
+    async connectToDatabase() {
+        const connection = await DBConnection.connectionWait() 
             this.profilRepository = connection.getRepository(Profile);
-        })
+        return;
     }
     
 

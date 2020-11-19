@@ -10,6 +10,7 @@ import { Routes } from "./routes";
 import { User } from "./entity/User";
 import { ErrorHandler, responseError } from './util/ErrorHandler';
 import * as multer from 'multer';
+import { DBConnection } from './util/Connection';
 
 // createConnection(require('../ormconfig.ts') ).then(async connection => {
 
@@ -58,6 +59,8 @@ import * as multer from 'multer';
 // }).catch(error => console.log(error));
 
 // create express app
+( async() => {
+
 const upload = multer();
 const app = express();
 app.use(cors());
@@ -91,7 +94,11 @@ app.use(express.static(__dirname + "/../../public"));
 
 // Route APi
 //  ada masalah disini
-app.use('/api', Routes)
+while (DBConnection.connection === null ||DBConnection.connection === undefined) {
+    await DBConnection.connect()
+    console.log(DBConnection.connection)
+    app.use('/api', Routes)
+}
 
 app.use((error: ErrorHandler, req: Request, res: Response, next: NextFunction) => {
     responseError(res, error.message, error.statusCode)
@@ -104,3 +111,5 @@ app.use((error: ErrorHandler, req: Request, res: Response, next: NextFunction) =
 app.listen(process.env.APP_PORT, async () => {
     console.log(`Server listenning on port ${process.env.APP_PORT}`);
 });
+
+})()

@@ -11,10 +11,15 @@ export class RestaurantController {
 
     private restaurantRepository :Repository<Restaurant> ;
 
+
     constructor() {
-        DBConnection.connect().then(connection => {
-            this.restaurantRepository = connection.getRepository(Restaurant);
-        })
+        this.connectToDatabase()
+    }
+
+    async connectToDatabase() {
+        const connection = await DBConnection.connectionWait() 
+        this.restaurantRepository = connection.getRepository(Restaurant);
+        return;
     }
 
     limitOption(request: Request) {

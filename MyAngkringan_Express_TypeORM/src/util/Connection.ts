@@ -5,22 +5,34 @@ const config = require('../../ormconfig.ts');
 
 export class DBConnection {
 
-    public static connection : Connection ;
+    public static connection: Connection;
 
-    public static async connect(){
-        try {
-            if (this.connection === null ||this.connection === undefined ) {
-                const connection = await createConnection( config )
-                this.connection = connection
+    /**
+     * static connectionWait
+     */
+    public static async connectionWait() {
+        return new Promise<Connection>((resolve, reject) => {
+            if (DBConnection.connection === null || DBConnection.connection === undefined) {
+                setTimeout(async () => {
+                    resolve( await DBConnection.connectionWait() )
+                }, 2000);
+            }else {
+                resolve(DBConnection.connection)
             }
-            return this.connection
-        } catch (error) {
-            console.log(error)
-            console.log('.... rettrying')
-            setTimeout(async () => {
-                return await DBConnection.connect()
-            }, 2000);
-        }
+        })
     }
 
+    public static async connect() {
+        try {
+            await DBConnection.connection && DBConnection.connection.close()
+            console.log(DBConnection.connection)
+            if (DBConnection.connection === null || DBConnection.connection === undefined) {
+                const connection = await createConnection(config)
+                DBConnection.connection = connection
+            }
+            return DBConnection.connection
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }

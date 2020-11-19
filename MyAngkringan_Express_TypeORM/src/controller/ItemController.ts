@@ -10,10 +10,15 @@ export class ItemController {
     private itemRepository: Repository<Item>;
     // private restaurantRepository = getRepository(Restaurant);
 
+
     constructor() {
-        DBConnection.connect().then(connection => {
-            this.itemRepository = connection.getRepository(Item);
-        })
+        this.connectToDatabase()
+    }
+
+    async connectToDatabase() {
+        const connection = await DBConnection.connectionWait() 
+        this.itemRepository = connection.getRepository(Item);
+        return;
     }
 
     limitOption(request: Request) {

@@ -11,9 +11,9 @@ const Routes = express.Router()
 
 Routes.use('/user', routeUser )
 Routes.use('/item', routeItem )
-// Routes.use('/review', routeReview )
-// Routes.use('/restaurant', routeRestaurant )
-// Routes.use('/profile', routeProfile )
+Routes.use('/review', routeReview )
+Routes.use('/restaurant', routeRestaurant )
+Routes.use('/profile', routeProfile )
 
 export {Routes};
 

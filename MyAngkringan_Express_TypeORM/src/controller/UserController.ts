@@ -16,7 +16,7 @@ export class UserController {
 
     async connectToDatabase() {
         console.log(this.userRepository)
-        const connection = await DBConnection.connect()
+        const connection = await DBConnection.connectionWait()
         this.userRepository = connection.getRepository(User)
         console.log(this.userRepository)
         return ;
@@ -32,6 +32,7 @@ export class UserController {
     }
 
     async getOne(request: Request, next: NextFunction) {
+        console.log(DBConnection.connection)
         try {
             const { password, ...dataSearch } = request.body
             return this.userRepository.findOneOrFail({ where: { ...dataSearch } });
