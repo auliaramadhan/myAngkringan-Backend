@@ -7,56 +7,11 @@ import * as swaggerJSDoc from 'swagger-jsdoc'
 import * as swaggerUi from 'swagger-ui-express'
 import { Request, Response, NextFunction } from "express";
 import { Routes } from "./routes";
-import { User } from "./entity/User";
 import { ErrorHandler, responseError } from './util/ErrorHandler';
 import * as multer from 'multer';
 import { DBConnection } from './util/Connection';
-
-// createConnection(require('../ormconfig.ts') ).then(async connection => {
-
-//     console.log(connection.isConnected)
-//     // create express app
-//     const app = express();
-//     app.use(bodyParser.json());
-
-//     // register express routes from defined application routes
-//     // Routes.forEach(route => {
-//     //     (app as any)[route.method](route.route, (req: Request, res: Response, next: Function) => {
-//     //         const result = (new (route.controller as any))[route.action](req, res, next);
-//     //         if (result instanceof Promise) {
-//     //             result.then(result => result !== null && result !== undefined ? res.send(result) : undefined);
-
-//     //         } else if (result !== null && result !== undefined) {
-//     //             res.json(result);
-//     //         }
-//     //     });
-//     // });
-
-//     // Route APi
-//     //  ada masalah disini
-//     app.use('/api', Routes)
-
-//     app.use( (error: ErrorHandler, req: any, res: any, next :any) => {
-//         responseError(res, error.message, error.statusCode )
-//     } )
-
-//     // setup express app here
-//     // ...
-
-//     // start express server
-//     app.listen(3000);
-
-//     // insert new users for test
-//     // const admin = await connection.manager.create(User, {
-//     //     username: "admin",
-//     //     password: "admin",
-//     //     role:'admin'
-//     // })
-//     // admin.hashPassword(admin.password)
-//     // await connection.manager.save(admin);
-//     console.log("Express server has started on port 3000. Open http://localhost:3000/users to see results");
-
-// }).catch(error => console.log(error));
+import { join } from "path";
+import {  } from "./routes/itemRoute";
 
 // create express app
 ( async() => {
@@ -68,29 +23,39 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(express.json());
 
-const options = {
-    definition: {
-        openapi: '3.0.0', // Specification (optional, defaults to swagger: '2.0')
+const options : swaggerJSDoc.Options = {
+    swaggerDefinition:{
         info: {
-            title: 'Hello World', // Title (required)
-            version: '1.0.0', // Version (required)
+            title: "REST API for my App", // Title of the documentation
+            version: "1.0.0", // Version of the app
+            description: "This is the REST API for my product", // short description of the app
         },
+        openapi:'3.0.0',
+        host: "localhost:8080", // the host or url of the app
+        basePath: "/api", // the basepath of your endpoint
     },
+    // definition: {
+    //     openapi: '3.0.0', // Specification (optional, defaults to swagger: '2.0')
+    //     info: {
+    //         title: 'My Angkringan', // Title (required)
+    //         version: '1.0.0', // Version (required)
+    //     },
+    // },
+
     // Path to the API docs
     apis: [
-        './src/route/item.js',
-        './src/route/cart.js',
+        join(__dirname, "/src/routes/**/*.ts" ) ,
     ],
 };
 
 // Initialize swagger-jsdoc -> returns validated swagger spec in json format
 const swaggerSpec = swaggerJSDoc(options);
-app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {explorer:true}))
 
 
 // ini dibawah biar bisa pake form data
 // app.use( upload.array());
-app.use(express.static(__dirname + "/../../public"));
+app.use(express.static( join( __dirname, "/../../public")));
 
 // Route APi
 //  ada masalah disini
