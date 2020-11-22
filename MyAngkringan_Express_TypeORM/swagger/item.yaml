@@ -1,0 +1,56 @@
+openapi: 3.0.2
+
+components:
+  schemas:
+    Item:
+      type: object
+      required:
+        - name
+        - price
+        - rating
+      properties:
+        name: 
+          type: boolean
+        price:
+          type: number
+        rating:
+          type: number
+        image:
+          type: string
+        id:
+          type: string
+        createdAt: 
+          type: string
+        updatedAt: 
+          type: string
+
+paths:
+  /item/search:
+      get:
+        description: get all item
+        parameters:
+          - in: query
+            name: name
+            schema:
+              type: string
+          - in: query
+            name: price
+            schema:
+              type: number
+          - in: query
+            name: createdOn
+            schema:
+              type: string
+        responses:
+          200:
+            description: success data
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Item'
+  
+
+
+

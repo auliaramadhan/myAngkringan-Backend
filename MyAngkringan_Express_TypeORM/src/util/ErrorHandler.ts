@@ -49,4 +49,5 @@ export enum ErrMsg {
    UNSUPPORTED_MEDIA_TYPE = 'unsupported_media_type' ,
    INTERNAL_SERVER_ERROR = 'internal_server_error' ,
    NOT_IMPLEMENTED = 'not_implemented' ,
+   ER_DUP_ENTRY = "username atau email sudah dipakai"
 }

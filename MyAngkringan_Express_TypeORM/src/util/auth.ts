@@ -5,7 +5,7 @@ import * as redis from "redis"
 import { IUser } from '../entity/User';
 const client = redis.createClient(process.env.REDIS_PORT);
 
-export function auth(roles : string[]) {
+export function auth(roles : UserRoleType[]) {
   return (req: Request, res: Response, next: NextFunction) => {
     if (
       req.headers["authorization"] &&

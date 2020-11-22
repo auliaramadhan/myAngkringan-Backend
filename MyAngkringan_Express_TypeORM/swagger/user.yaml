@@ -1,0 +1,243 @@
+openapi: '3.0.2'
+components:
+  schemas:
+    Fail:
+      type: object
+      properties:
+        success: 
+          type: boolean
+          example: false
+          default: false
+        statusCode: 
+          type: number
+          example: 400
+          default: 400
+        message: 
+          type: string
+          example: bad request
+          default: bad request
+    UserSuccess:
+      type: object
+      properties:
+        success: 
+          type: boolean
+        statusCode: 
+          type: number
+        message: 
+          type: string
+        data:
+            $ref: '#/components/schemas/User'
+    User:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username: 
+          type: boolean
+        password:
+          type: string
+        role:
+          type: string
+        email:
+          type: string
+        id:
+          type: string
+        createdAt: 
+          type: string
+        updatedAt: 
+          type: string
+paths:
+  /user/:
+    description: get all 
+    get:
+      summary: Get a user by ID
+      responses:
+        '200':
+          description: A single user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSuccess'
+
+  /user/auth:
+    description: check if user is login
+    get:
+      responses:
+        200:
+          description: successful
+        400:
+          description: successful
+
+  /user/registrasi:
+    description: add new user
+    post:
+      requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: add new user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /user/createManager:
+    description: add new user
+    post:
+      requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: add new user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSuccess'
+
+  /user/changepassword/{username}:
+    description: add new user
+    post:
+      parameters:
+      - in: path
+        name: username
+        required: true
+        schema:
+          type: string
+      requestBody:
+          content:
+            application/json:
+              schema:
+                required:
+                  - password
+                type: object
+                properties:
+                  password:
+                    type: string
+      responses:
+        default:
+          description: add new user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSuccess'
+  /user/changeroles/{username}:
+    description: cheange role manager and customer
+    post:
+      parameters:
+      - in: path
+        name: username
+        required: true
+        schema:
+          type: string
+      requestBody:
+          content:
+            application/json:
+              schema:
+                required:
+                  - role
+                type: object
+                properties:
+                  password:
+                    type: string
+      responses:
+        default:
+          description: add new user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSuccess'
+  /user/login:
+    description: login to app
+    post:
+      requestBody:
+          content:
+            application/json:
+              schema:
+                required:
+                - username
+                  - password
+                type: object
+                properties:
+                  password:
+                    type: string
+                  username:
+                    type: string
+      responses:
+        default:
+          description: login to app
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSuccess'
+  /user/forgot_password:
+    description: change password
+    post:
+      requestBody:
+          content:
+            application/json:
+              schema:
+                required:
+                  - email
+                type: object
+                properties:
+                  email:
+                    type: string
+      responses:
+        default:
+          description: login to app
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSuccess'
+
+  
+
+
+# success: true
+# statusCode: 200
+# message: Success
+# data:
+#   username: auliamanager
+#   password: '1234'
+#   role: manager
+#   email: aulia.ramadhan39@gmail.com
+#   id: 10
+#   createdAt: '2020-11-20T07:38:05.862Z'
+#   updatedAt: '2020-11-20T07:38:05.862Z'
+
+# {
+#     "success": true,
+#     "statusCode": 200,
+#     "message": "Success",
+#     "data": {
+#         "username": "auliamanager",
+#         "password": "1234",
+#         "role": "manager",
+#         "email": "aulia.ramadhan39@gmail.com",
+#         "restaurant": {
+#             "name": "kfc",
+#             "description": "kfc finger licking good",
+#             "id": 1,
+#             "createdOn": "2020-11-20T07:38:05.858Z",
+#             "updatedOn": "2020-11-20T07:38:05.858Z"
+#         },
+#         "profile": {
+#             "firstName": "aulia",
+#             "lastName": "manager",
+#             "phoneNumber": "08122342506",
+#             "id": 1,
+#             "createdAt": "2020-11-20T07:38:05.850Z",
+#             "updatedAt": "2020-11-20T07:38:05.850Z"
+#         },
+#         "id": 10,
+#         "createdAt": "2020-11-20T07:38:05.862Z",
+#         "updatedAt": "2020-11-20T07:38:05.862Z"
+#     }
+# }

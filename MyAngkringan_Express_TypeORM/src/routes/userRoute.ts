@@ -16,7 +16,7 @@ const route = express.Router()
 
 const userController = new UserController()
 
-route.get('/', async (request: Request, response: Response, next: NextFunction) => {
+route.get('/', auth(['admin']) , async (request: Request, response: Response, next: NextFunction) => {
 	const name = await userController.all(next)
 
 	if (typeof name === undefined) { return; }
@@ -45,7 +45,7 @@ route.post('/auth', async (req: Request, res: Response, next: NextFunction) => {
 
 route.post('/registrasi', async (request: Request, response: Response, next: NextFunction) => {
 	// const newUser = await userController.save(request)
-	const newUser = await userController.saveLangsung(request, next)
+	const newUser = await userController.save(request, next)
 
 	if (typeof newUser === undefined) { return; }
 	responseSuccess(response, newUser)
@@ -53,21 +53,22 @@ route.post('/registrasi', async (request: Request, response: Response, next: Nex
 
 route.post('/createManager', async (request: Request, response: Response, next: NextFunction) => {
 	// const newUser = await userController.save(request)
-	const newUser = await userController.saveLangsung(request, next)
+	request.body.role = 'manager'
+	const newUser = await userController.save(request, next)
 
 	if (typeof newUser === undefined) { return; }
 	responseSuccess(response, newUser)
 })
 
 route.put("/changepassword/:username", auth([]), async (req: Request, res: Response, next: NextFunction) => {
-	const success = await userController.changePassword(req, next)
 	const dataUser: IUser = <IUser>req.user
-
+	
 	if (req.params.username !== dataUser.username) {
 		const error = new ErrorHandler(401, 'unauthorized')
 		next(error)
 		return;
 	}
+	const success = await userController.changePassword(req, next)
 	if (typeof success === undefined) { return; }
 	responseSuccess(res, success)
 });

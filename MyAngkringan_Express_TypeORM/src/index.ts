@@ -34,17 +34,9 @@ const options : swaggerJSDoc.Options = {
         host: "localhost:8080", // the host or url of the app
         basePath: "/api", // the basepath of your endpoint
     },
-    // definition: {
-    //     openapi: '3.0.0', // Specification (optional, defaults to swagger: '2.0')
-    //     info: {
-    //         title: 'My Angkringan', // Title (required)
-    //         version: '1.0.0', // Version (required)
-    //     },
-    // },
-
-    // Path to the API docs
+    // Path to the API docss
     apis: [
-        join(__dirname, "/src/routes/**/*.ts" ) ,
+        "./swagger/user.yaml" ,
     ],
 };
 
@@ -61,7 +53,7 @@ app.use(express.static( join( __dirname, "/../../public")));
 //  ada masalah disini
 while (DBConnection.connection === null ||DBConnection.connection === undefined) {
     await DBConnection.connect()
-    console.log(DBConnection.connection)
+    // console.log(DBConnection.connection)
     app.use('/api', Routes)
 }
 

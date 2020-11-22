@@ -15,10 +15,10 @@ export class UserController {
 
 
     async connectToDatabase() {
-        console.log(this.userRepository)
+        // console.log(this.userRepository)
         const connection = await DBConnection.connectionWait()
         this.userRepository = connection.getRepository(User)
-        console.log(this.userRepository)
+        // console.log(this.userRepository)
         return ;
     }
 
@@ -42,17 +42,7 @@ export class UserController {
     async save(request: Request, next: NextFunction) {
         try {
             const data: IUser = request.body
-            const profileBody: IProfile = data.profile
-            const profil: Profile = profileBody && await getRepository(Profile).create({
-                firstName: profileBody.firstName,
-                lastName: profileBody.lastName,
-                phoneNumber: profileBody.phoneNumber,
-            })
-            const newUser: User = this.userRepository.create({
-                username: data.username,
-                role: data.role,
-                profile: profil
-            });
+            const newUser: User = this.userRepository.create(data);
             newUser.hashPassword(data.password)
             return this.userRepository.save(newUser)
         } catch (error) { return handleErrorDatabase(error, next) }
@@ -79,6 +69,15 @@ export class UserController {
             const dataUser: IUser = <IUser>request.user
             const dataSave: IUser = { ...dataUser, ...dataBody, }
             return this.userRepository.save(dataSave)
+        } catch (error) { return handleErrorDatabase(error, next) }
+    }
+
+    async updateByAdmin(request: Request, next: NextFunction) {
+        try {
+            let { id, username } =request.params
+            const _id :number =  id ? parseInt(id) : undefined
+            const dataBody: IUser = request.body
+            return this.userRepository.update( {id :_id, username} ,dataBody)
         } catch (error) { return handleErrorDatabase(error, next) }
     }
 
