@@ -1,12 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <script src="http://localhost:8080/socket.io/socket.io.js"></script>
+   <script>
+      const socket = io('http://localhost:8080');
+      socket.on('room-created', room => {
+         console.log(room)
+      })
+      socket.on('user-connected', (name) => {
+         console.log(name)
+      })
+      socket.on('chat-message', (msg) => {
+         console.log(msg)
+      })
+      socket.on('user-disconnected', (user) => {
+         console.log(user)
+      })
+      const connectToRoom = (room, name) => socket.emit('new-user',room, name )
+      const sendChat = (room, name) => socket.emit('send-chat-message', room, name )
+   </script>
    <title>Document</title>
 </head>
+
 <body>
    hai
 </body>
+
 </html>

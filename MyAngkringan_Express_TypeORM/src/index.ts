@@ -11,13 +11,21 @@ import { ErrorHandler, responseError } from './util/ErrorHandler';
 import * as multer from 'multer';
 import { DBConnection } from './util/Connection';
 import { join } from "path";
-import {  } from "./routes/itemRoute";
+
+import * as socketIO from 'socket.io';
+import { responseSuccess } from './util/Response';
+
 
 // create express app
 ( async() => {
 
 const upload = multer();
 const app = express();
+
+let server = require("http").Server(app);
+let io : socketIO.Server  = require("socket.io")(server);
+
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -36,7 +44,7 @@ const options : swaggerJSDoc.Options = {
     },
     // Path to the API docss
     apis: [
-        "./swagger/user.yaml" ,
+        "./swagger/*.yaml" ,
     ],
 };
 
@@ -65,8 +73,53 @@ app.use((error: ErrorHandler, req: Request, res: Response, next: NextFunction) =
 // ...
 
 // start express server
-app.listen(process.env.APP_PORT, async () => {
+server.listen(process.env.APP_PORT, () => {
     console.log(`Server listenning on port ${process.env.APP_PORT}`);
 });
 
+app.post('/room', (req: Request, res: Response) => {
+  if (rooms[req.body.room] != null) {
+    return responseSuccess(res, 'room already exist' )
+  }
+  rooms[req.body.room] = { users: {} }
+  // Send message that new room was created
+  io.emit('room-created', req.body.room)
+  return responseSuccess(res, 'room ccreated' )
+})
+
+
+
+io.on('connection', (socket : socketIO.Socket) => {
+  socket.on('new-user', (room: string, name: string) => {
+      socket.join(room)
+      rooms[room].users[socket.id] = name
+      socket.to(room).broadcast.emit('user-connected', name)
+    })
+    socket.on('send-chat-message', (room, message) => {
+      socket.to(room).broadcast.emit('chat-message', { message: message, name: rooms[room].users[socket.id] })
+    })
+    socket.on('disconnect', () => {
+      getUserRooms(socket).forEach(room => {
+        socket.to(room).broadcast.emit('user-disconnected', rooms[room].users[socket.id])
+        delete rooms[room].users[socket.id]
+      })
+    })
+})
+
 })()
+
+const rooms : tRooms = { }
+
+type tRooms = {
+  [P in string]?: {
+    users : {[ P in string ] ?: string}
+  }
+}
+
+
+function getUserRooms(socket) {
+    return Object.entries(rooms).reduce((names, [roomName, room]) => {
+      if (room.users[socket.id] != null) names.push(roomName)
+      return names
+    }, [])
+  }

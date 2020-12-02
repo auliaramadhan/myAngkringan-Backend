@@ -23,7 +23,7 @@ route.get('/', auth(['admin']) , async (request: Request, response: Response, ne
 	responseSuccess(response, name)
 })
 
-route.post('/auth', async (req: Request, res: Response, next: NextFunction) => {
+route.post('/auth',auth([]), async (req: Request, res: Response, next: NextFunction) => {
 	if (
 		req.headers["authorization"] &&
 		req.headers["authorization"].startsWith("Bearer")

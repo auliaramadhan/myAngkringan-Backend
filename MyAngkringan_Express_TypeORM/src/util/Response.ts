@@ -12,7 +12,7 @@ export interface ResponseData {
    // data? : data<T>
 }
 
-export function responseSuccess( res : Response ,data: any , code:number = 200, extra?  ) : void {
+export function responseSuccess( res : Response ,data: any , code:number = 200, extra? : any  ) : void {
    const jsonData : ResponseData = {
       success: true,
       statusCode: code || 200,

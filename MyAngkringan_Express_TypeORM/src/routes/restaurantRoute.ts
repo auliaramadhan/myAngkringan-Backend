@@ -19,7 +19,7 @@ route.get("/", async (request: Request, response: Response, next: NextFunction) 
     const listResto = await restaurantController.all(next)
 
     if (typeof listResto === undefined) { return; }
-    responseSuccess(response, listResto, 0, request.body.option)
+    responseSuccess(response, listResto, null, request.body.option)
 
 });
 
