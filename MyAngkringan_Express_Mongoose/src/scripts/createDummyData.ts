@@ -1,4 +1,4 @@
-import { UserModel } from "../database/users/users.model";
+import { UserModel } from "../database/users/users.schema";
 import { connect, disconnect } from "../database/database";
 
 (async () => {

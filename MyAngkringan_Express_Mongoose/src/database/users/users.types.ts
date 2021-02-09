@@ -1,4 +1,5 @@
-import { Document, Model } from "mongoose";
+import { Document, model, Model } from "mongoose";
+import UserSchema from "./users.schema";
 
 export interface IUser {
   firstName: string;
@@ -28,4 +29,3 @@ export interface IUserModel extends Model<IUserDocument> {
     max?: number
   ) => Promise<IUserDocument[]>;
 }
-
