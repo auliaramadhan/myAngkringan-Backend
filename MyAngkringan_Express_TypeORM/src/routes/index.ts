@@ -5,6 +5,7 @@ import { routeItem } from "./itemRoute";
 import { routeReview } from "./reviewRoute";
 import { routeRestaurant } from "./restaurantRoute";
 import { routeProfile } from "./profileRoute";
+import { routeCart } from "./cartRoute";
 // import * as express from 'express'
 
 const Routes = express.Router()
@@ -14,6 +15,7 @@ Routes.use('/item', routeItem )
 Routes.use('/review', routeReview )
 Routes.use('/restaurant', routeRestaurant )
 Routes.use('/profile', routeProfile )
+Routes.use('/cart', routeCart )
 
 export {Routes};
 
