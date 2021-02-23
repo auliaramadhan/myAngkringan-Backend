@@ -1,12 +1,23 @@
-import { Document, model, Model } from "mongoose";
-import UserSchema from "./users.schema";
+import { Document, Model } from "mongoose";
 
+// export interface IUser {
+//   firstName: string;
+//   lastName: string;
+//   age: number;
+//   dateOfEntry?: Date;
+//   lastUpdated?: Date;
+// }
+
+export type UserRoleType = "admin" | "manager" | "customer"
 export interface IUser {
-  firstName: string;
-  lastName: string;
-  age: number;
-  dateOfEntry?: Date;
-  lastUpdated?: Date;
+  username: string;
+  password: string;
+  email: string;
+  role: UserRoleType;
+  createdAt?: Date;
+  updatedAt?: Date;
+  // restaurant?: Restaurant;
+  // profile?: Profile;
 }
 
 export interface IUserDocument extends IUser, Document {
@@ -14,14 +25,18 @@ export interface IUserDocument extends IUser, Document {
   sameLastName: (this: IUserDocument) => Promise<Document[]>;
 }
 
+
 export interface IUserModel extends Model<IUserDocument> {
   findOneOrCreate: (
     this: IUserModel,
     {
-      firstName,
-      lastName,
-      age,
-    }: { firstName: string; lastName: string; age: number }
+      username,
+      password,
+      email,
+      role,
+      createdAt,
+      updatedAt,
+    }: IUser
   ) => Promise<IUserDocument>;
   findByAge: (
     this: IUserModel,
@@ -29,3 +44,18 @@ export interface IUserModel extends Model<IUserDocument> {
     max?: number
   ) => Promise<IUserDocument[]>;
 }
+// export interface IUserModel extends Model<IUserDocument> {
+//   findOneOrCreate: (
+//     this: IUserModel,
+//     {
+//       firstName,
+//       lastName,
+//       age,
+//     }: { firstName: string; lastName: string; age: number }
+//   ) => Promise<IUserDocument>;
+//   findByAge: (
+//     this: IUserModel,
+//     min?: number,
+//     max?: number
+//   ) => Promise<IUserDocument[]>;
+// }
